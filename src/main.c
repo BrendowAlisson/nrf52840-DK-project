@@ -59,7 +59,7 @@ void updateArrayPositions(int *sequence_button_pressed, int first_position)
 	sequence_button_pressed[1] = aux;
 }
 
-void readSensor(const struct device *I2C, unit8_t *data)
+void readSensor(const struct device *I2C, uint8_t *data)
 {
 	i2c_reg_read_byte(I2C, I2C_SLV_ADDR, 0x0F, data);
 	printk("%u", data);
@@ -70,7 +70,7 @@ void toggleLED(int state)
 	gpio_pin_set_dt(&led_1, state);
 }
 
-void resetCounter(const struc device *RESET, int *button_toggle, int *toggle_flag)
+void resetCounter(const struct device *RESET, int *button_toggle, int *toggle_flag)
 {
 	if (button_toggle != toggle_flag)
 	{
