@@ -1,7 +1,6 @@
 # nrf52840-DK-project
-Este projeto foi desenvolvido para uma Placa de Desenvolvimento nrf52840-DK com Zephyr RTOS 2.7.1 .
-O desafio dado foi:
-"A aplicação dele é que há dois botões (Botão 1 e Botão 2) em que quando não estão pressionados nada acontece. Entretanto quando o Botão 1 é pressionado, deve piscar o LED1 a cada 500 us, além de ler um contador I2C (S-35770) conectado na placa com a maior frequência suportada.
+Este projeto foi desenvolvido para uma Placa de Desenvolvimento nrf52840-DK com Zephyr RTOS 2.7.1 . O desafio dado para esse projeto foi:
+"O projeto deve ter dois botões (Botão 1 e Botão 2) em que quando não estão pressionados nada acontece. Entretanto quando o Botão 1 é pressionado, deve piscar o LED1 a cada 500 us, além de ler um contador I2C (S-35770) conectado na placa com a maior frequência suportada.
 Já quando o Botão 2 é pressionado, deve acender o LED2 imediatamente e deve permanecer ligado enquanto o Botão 2 é pressionado.
 Caso o Botão 1 e Botão 2 sejam apertados juntos, a aplicação deve esperar a soltura de quem foi pressionado primeiro para realizar a tarefa do segundo. Uma exceção vai ser o piscar do LED1 que deve ser executada toda vez.
 Por fim, quando o pino conectado ao LOOP da S-35770 for mudado de sinal lógico, deve resetar o contador.
