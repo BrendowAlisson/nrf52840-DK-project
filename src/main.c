@@ -19,7 +19,7 @@ static const struct gpio_dt_spec button_0 = GPIO_DT_SPEC_GET(SW0_NODE, gpios);
 static const struct gpio_dt_spec button_1 = GPIO_DT_SPEC_GET(SW1_NODE, gpios);
 static struct gpio_dt_spec led_0 = GPIO_DT_SPEC_GET(LED0_NODE, gpios);
 static struct gpio_dt_spec led_1 = GPIO_DT_SPEC_GET(LED1_NODE, gpios);
-int position[2] = {0, 1};
+int (*sequence_button_pressed)[2] = {0, 1};
 
 void blink(bool flag)
 {
@@ -34,19 +34,78 @@ bool deviceNotExists(const struct device *dvc)
 		printk("I2C: Device driver not found\n");
 		return true;
 	}
+
 	return false;
 }
 
-bool isPressed(int state_button) {
+bool isPressed(int state_button) 
+{
 	if(state_button == 0){
 		return true;
 	}
+
+	return false;
+}
+
+void updateArrayPositions(int *sequence_button_pressed, int first_position)
+{
+	if(first_position == sequence_button_pressed[0])
+	{
+		return;
+	}
+
+	int aux = sequence_button_pressed[0];
+	sequence_button_pressed[0] = sequence_button_pressed[1];
+	sequence_button_pressed[1] = aux;
+}
+
+void readSensor(const struct device *I2C, unit8_t *data)
+{
+	i2c_reg_read_byte(I2C, I2C_SLV_ADDR, 0x0F, data);
+	printk("%u", data);
+}
+
+void toggleLED(int state)
+{
+	gpio_pin_set_dt(&led_1, state);
+}
+
+void resetCounter(const struc device *RESET, int *button_toggle, int *toggle_flag)
+{
+	if (button_toggle != toggle_flag)
+	{
+		gpio_pin_set(RESET, 11, 0);
+		toggle_flag = button_toggle;
+		return;
+	}
+	
+	gpio_pin_set(RESET, 11, 1);
+}
+
+void orderButtonPressSequence(int *button_0_state, int *button_1_state, int *sequence_button_pressed)
+{
+	if (isPressed(button_0_state) && !isPressed(button_1_state))
+	{
+		updateArrayPositions(sequence_button_pressed, 0);
+	}
+	else if (!isPressed(button_0_state) && isPressed(button_1_state))
+	{
+		updateArrayPositions(sequence_button_pressed, 1);
+	}
+}
+
+bool checkButtonOrder(int first_position, int button)
+{
+	if(button == first_position)
+	{
+		return true;
+	}
+	
 	return false;
 }
 
 int main()
 {
-
 	const struct device *I2C = device_get_binding(TWI);
 	const struct device *LOOP = device_get_binding(GPIO1_PORT);
 	const struct device *RESET = device_get_binding(GPIO1_PORT);
@@ -58,10 +117,10 @@ int main()
 	gpio_pin_configure(LOOP, 10, GPIO_INPUT | GPIO_PULL_UP);
 	gpio_pin_configure(RESET, 11, GPIO_OUTPUT_HIGH);
 
-	int button_toggle = gpio_pin_get(LOOP, 10);
-	int toggle_flag = button_toggle;
-	bool led_blink = true;
-	uint8_t data = 1;
+	int *button_toggle = gpio_pin_get(LOOP, 10);
+	int *toggle_flag = button_toggle;
+	bool led_blink_status = true;
+	uint8_t *data = 1;
 
 	if (deviceNotExists(I2C))
 	{
@@ -73,51 +132,32 @@ int main()
 
 	while (true)
 	{
-		int button_0_state = gpio_pin_get_dt(&button_0);
-		int button_1_state = gpio_pin_get_dt(&button_1);
-	
-		gpio_pin_set(RESET, 11, 1);
+		int *button_0_state = gpio_pin_get_dt(&button_0);
+		int *button_1_state = gpio_pin_get_dt(&button_1);
 		button_toggle = gpio_pin_get(LOOP, 10);
 
-		if (isPressed(button_0_state) && !isPressed(button_1_state))
-		{
-			position[0] = 0;
-			position[1] = 1;
-		}
-		else if (!isPressed(button_0_state) && isPressed(button_1_state))
-		{
-			position[0] = 1;
-			position[1] = 0;
-		}
+		orderButtonPressSequence(button_0_state, button_1_state, sequence_button_pressed);
+		resetCounter(RESET, button_toggle, toggle_flag);
 
 		if (isPressed(button_0_state))
 		{
-			blink(led_blink);
-			led_blink = !led_blink;
+			blink(led_blink_status);
+			led_blink_status = !led_blink_status;
 
-			if (position[0] == 0)
+			if (checkButtonOrder(sequence_button_pressed[0], 0))
 			{
-				i2c_reg_read_byte(I2C, I2C_SLV_ADDR, 0x00, &data);
-				printk("%u", data);
+				readSensor(I2C, data);
 			}
 		}
 
-		if (isPressed(button_1_state))
+		if (isPressed(button_1_state) && checkButtonOrder(sequence_button_pressed[0], 1))
 		{
-			if(position[0] == 1)
-			{
-				gpio_pin_set_dt(&led_1, 1);
-			}
+			toggleLED(1);
 		}
 		else
 		{
-			gpio_pin_set_dt(&led_1, 0);
+			toggleLED(0);
 		}
 
-		if (button_toggle != toggle_flag)
-		{
-			gpio_pin_set(RESET, 11, 0);
-			toggle_flag = button_toggle;
-		}
 	}
 }
