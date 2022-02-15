@@ -26,7 +26,7 @@ Além disso, os LEDS utilizados também encontram-se na placa:
 - LED 2 (P0.14). [1](https://docs.zephyrproject.org/2.7.1/boards/arm/nrf52840dk_nrf52840/doc/index.html)
 
 Para encontrar as configurações dos pinos foi usado da API de Devicetree disponibilizado pelo Zephyr no GitHub [2](https://github.com/nrfconnect/sdk-zephyr/blob/main/boards/arm/nrf52840dk_nrf52840/nrf52840dk_nrf52840.dts). Deste modo, é possível usar esta API para encontrar as portas através dos comandos:
-`DT_ALIAS`, `DT_LABEL` e `DT_NODELABEL`[3](https://docs.zephyrproject.org/latest/reference/devicetree/api.html). 
+`DT_ALIAS`, `DT_LABEL` e `DT_NODELABEL` [3](https://docs.zephyrproject.org/latest/reference/devicetree/api.html). 
 
 
 Em seguida foi criado um struct para as GPIOs com as suas localizações na API [4](https://docs.zephyrproject.org/latest/reference/peripherals/gpio.html). Outro fato importante é saber o endereço do slave S-35770 para fazer uso do I2C. Quando é analisado o datasheet, é possível ver que o endereço é "00110010" ou "0x32" em hexadecimal. 
@@ -59,7 +59,57 @@ Caso o Botão 1 e Botão 2 sejam apertados juntos, a aplicação deve esperar a 
 
 ## Execução do código
 
+### Instalação do Chocolatey
+
+[Instale-o através desse link](https://chocolatey.org/install)
+
+Execute o cmd como administrador e use o seguinte comando :
+
+```bash
+choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
+choco install ninja gperf python git
+```
+
+Depois instale o west através de:
+
+```
+pip3 install west
+```
+
+Após isso, instale [GNU Arm Embedded Toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads) no diretório **c:/gnuarmemb**
+
 ### Instalação do Zephyr RTOS v2.7.1
+
+No CMD use o seguinte código:
+
+```bash
+west init -m https://github.com/zephyrproject-rtos/zephyr.git --mr zephyr-v2.7.1
+```
+
+Em seguida, utilize:
+
+```bash
+west update
+```
+
+Por fim:
+
+```bash
+west zephyr-export
+```
+
+### Ajustes Finais do Ambiente
+
+Ainda no CMD digite:
+```bash
+pip3 install -r zephyr/scripts/requirements.txt
+```
+Depois:
+
+```bash
+set ZEPHYR_TOOLCHAIN_VARIANT=gnuarmemb
+set GNUARMEMB_TOOLCHAIN_PATH=c:\gnuarmemb
+```
 
 ### Compilação
 Para compilar o código, utilize o comando :
