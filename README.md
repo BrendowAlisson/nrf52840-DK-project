@@ -118,7 +118,7 @@ Para compilar o código, utilize o comando :
 west build -b nrf52840dk_nrf52840 -t guiconfig
 ```
 
-Deste modo, é aberto o Kconfig interativo [10](https://docs.zephyrproject.org/latest/guides/build/kconfig/menuconfig.html) e nele é possível desativar os timers da placa, concluindo a última etapa do desafio.
+Deste modo, é aberto o Kconfig interativo [^10] e nele é possível desativar os timers da placa, concluindo a última etapa do desafio.
 
 - [x] Você deve usar Kconfig symbols para remover todas as operações de contador para um cenário em que o aplicativo seria compilado e testado sem o contador anexado ao DK.
 
@@ -142,3 +142,4 @@ Deste modo, é aberto o Kconfig interativo [10](https://docs.zephyrproject.org/l
 
 [^9]:https://docs.zephyrproject.org/latest/reference/peripherals/i2c.html#c.i2c_reg_read_byte
 
+[^10]:https://docs.zephyrproject.org/latest/guides/build/kconfig/menuconfig.html
