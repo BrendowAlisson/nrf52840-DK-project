@@ -53,9 +53,7 @@ Em seguida, foi criado um `while()` onde há os estados dos botões (se estão e
 
 Com isso, foi concluído:
 
-- [x] A aplicação dele é que há dois botões (Botão 1 e Botão 2) em que quando não estão pressionados nada acontece. Entretanto quando o Botão 1 é pressionado, deve piscar o LED1 a cada 500 us, além de ler um contador I2C (S-35770) conectado na placa com a maior frequência suportada.
-Já quando o Botão 2 é pressionado, deve acender o LED2 imediatamente e deve permanecer ligado enquanto o Botão 2 é pressionado.
-Caso o Botão 1 e Botão 2 sejam apertados juntos, a aplicação deve esperar a soltura de quem foi pressionado primeiro para realizar a tarefa do segundo. Uma exceção vai ser o piscar do LED1 que deve ser executada toda vez.
+- [x] Quando o Botão 1 é pressionado, deve piscar o LED1 a cada 500 us, além de ler um contador I2C (S-35770) conectado na placa com a maior frequência suportada. Já quando o Botão 2 é pressionado, deve acender o LED2 imediatamente, e deve permanecer ligado enquanto o Botão 2 é pressionado. Caso o Botão 1 e Botão 2 sejam apertados juntos, a aplicação deve esperar a soltura de quem foi pressionado primeiro para realizar a tarefa do segundo. Uma exceção vai ser o piscar do LED1 que deve ser executada toda vez.  
 
 ## Execução do código
 
