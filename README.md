@@ -34,9 +34,9 @@ Em seguida foi criado um struct para as GPIOs com as suas localizações na API 
 
 Depois de construído todas as `struct gpio_dt_spec` [5](https://docs.zephyrproject.org/apidoc/latest/structgpio__dt__spec.html) para os botões e leds, foi criado `struct device` [6](https://docs.zephyrproject.org/apidoc/latest/structdevice.html) para os pinos de `I2C`, `LOOP` e `RESET`. Por conseguinte, foi configurado as portas como saída (`LEDS` e `RESET`) e entradas (`BOTÕES` e `LOOP`). Para as GPIOs configuradas como entradas, utilizou-se do método de pull up para não ter problema com entrada de dados flutuantes.
 
-Após configurado cada porta lógica, foi criado uma variável que terá o valor do pino de `TOGGLE` e um flag que terá o mesmo valor inicial. Deste modo, haverá uma condição que quando o valor do pino `TOGGLE` for diferente da `flag TOGGLE`, irá setar o pino RESET para 0, já que no datasheet da S-35770 é possível ver que seu contador reseta quando há uma entrada lógica sendo BAIXA. Assim é completado: 
+Após configurado cada porta lógica, foi criado uma variável que terá o valor do pino de `TOGGLE` e um flag que terá o mesmo valor inicial. Deste modo, haverá uma condição que quando o valor do pino `TOGGLE` for diferente da `flag TOGGLE`, irá setar o pino `RESET` para 0, já que no datasheet da S-35770 é possível ver que seu contador reseta quando há uma entrada lógica sendo BAIXA. Assim é completado: 
 
-- [x] Por fim, quando o pino conectado ao LOOP da S-35770 for mudado de sinal lógico, deve resetar o contador.
+- [x] Por fim, quando o pino conectado ao `LOOP` da S-35770 for mudado de sinal lógico, deve resetar o contador.
 
 Há também uma condição que se não houver um device na porta `I2C`, faz com que a função `main` termine. Entretanto, caso exista, a programação continua e manda uma mensagem para o debug através da função `printk` [7](https://docs.zephyrproject.org/apidoc/latest/printk_8h.html#a768a7dff8592b69f327a08f96b00fa54). 
 Sendo esse também um dos requisitos do desafio.
